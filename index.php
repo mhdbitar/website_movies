@@ -1,58 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<title>Shahed movies</title>
-<meta charset="utf-8">
-<link rel="icon" href="images/favicon.ico">
-<link rel="shortcut icon" href="images/favicon.ico">
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/jquery.countdown.css">
-<script src="js/jquery.js"></script>
+<?php
+  require('header.php');
+?>
 
-
-<script src="js/jquery.easing.1.3.js"></script>
-<script src="js/script.js"></script>
-<script src="js/jquery.carouFredSel-6.1.0-packed.js"></script>
-<script src="js/jquery.touchSwipe.min.js"></script>
-<script>
-$(window).load(
-    function () {
-        $('.carousel1').carouFredSel({
-            auto: false,
-            prev: '.prev',
-            next: '.next',
-            width: 220,
-            items: {
-                visible: {
-                    min: 3,
-                    max: 3
-                },
-                height: 'auto',
-                width: 220,
-            },
-            responsive: true,
-            scroll: 1,
-            mousewheel: false,
-            swipe: {
-                onMouse: false,
-                onTouch: true
-            }
-        });
-        $('.typo').mouseenter(
-            function () {
-                var temp = $(".typo>img").attr("data-href");
-                $(".typo>img").attr(
-                    "src", temp
-                );
-            }
-        );
-    });
-</script>
-<!--[if lt IE 9]>
-<script src="js/html5shiv.js"></script>
-<link rel="stylesheet" media="screen" href="css/ie.css">
-<![endif]-->
-</head>
 <body  class="page1">
 <p class="typo">&nbsp;</p>
 <p class="typo"><img src="images/the-movies-logo-1 (1).gif" width="440" height="323"></p>
@@ -90,16 +39,21 @@ $(window).load(
          </div>
       <a href="#" class="next"></a><a href="#" class="prev"></a>
       <h3 class="pl1">Movies</h3>
+      <?php 
+            $sql = "SELECT * FROM `categories`";
+            $categories = mysqli_query($connection, $sql);
+      ?>
+      <?php 
+          if ($categories->num_rows > 0) { 
+      ?>
       <div class="car_div">
-        <ul class="carousel1">
-          <li><img src="images/page1_img1.jpg" alt=""><a href="#">Drama Film</a></li>
-          <li><img src="images/page1_img2.jpg" alt=""><a href="#">horror Film</a></li>
-          <li><img src="images/page1_img3.jpg" alt=""><a href="#">Action Film </a></li>
-          <li><img src="images/page1_img1.jpg" alt=""><a href="#">Drama Film</a></li>
-          <li><img src="images/page1_img2.jpg" alt=""><a href="#">horror Film</a></li>
-          <li><img src="images/page1_img3.jpg" alt=""><a href="#">Action Film </a></li>
-        </ul>
-      </div>
+          <ul class="carousel1">
+            <?php while ($row = mysqli_fetch_assoc($categories)) { ?>
+              <li><img src="images/<?= $row['cover'] ?>" alt="<?= $row['name'] ?>"><a href="pages/categories.php?cat=<?= $row['cat_id'] ?>"><?= $row['name'] ?></a></li>
+            <?php } ?>
+          </ul>
+        </div>
+      <?php } ?>
       <div class="clear"></div>
       <div class="grid_3 alpha">
         <div class="box bx1 blue maxheight">
@@ -132,13 +86,7 @@ $(window).load(
      
   </div>
 </div>
-<footer>
-  <div class="container_12">
-    <div class="grid_12">
-      <div class="socials"> <a href="#"></a> <a href="#"></a> <a href="#"></a> <a href="#"></a> </div>
-      <div class="copy">Shahed Movies &copy; 2045 | <a href="#TOP">Top</a> | Design by: Maram-Lama-Alla-Amjad-Samhaa</a></div>
-    </div>
-  </div>
-</footer>
-</body>
-</html>
+
+<?php
+  require('footer.php');
+?>

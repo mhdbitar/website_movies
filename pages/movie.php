@@ -65,14 +65,6 @@ li {
       $cover = $row['cover'];
       $rate = $row['rate'];
     }
-
-  $user_id = 1;
-  $content = $_POST['content'];
-
-  $sql = "INSERT INTO comments (user_id, content) values('".$user_id."',  '".$content."')";
-  $result = mysqli_query($connection, $sql);
-
-  echo '<p style="color: red;">Your comment has been added successfully.</p>';
 ?>
 <p><img src="../images/<?= $cover ?>" width="200" height="280" alt="<?= $name ?>" /></p>
 <table width="537" height="220" border="1">
@@ -101,6 +93,19 @@ li {
 </table>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
+
+<?php if (is_login()) { ?>
+<?php 
+    if (isset($_POST['submit'])) {
+      $user_id = get_user_id();
+      $content = $_POST['content'];
+
+      $sql = "INSERT INTO comments (user_id, content) values('".$user_id."',  '".$content."')";
+      $result = mysqli_query($connection, $sql);
+
+      echo '<p style="color: red;">Your comment has been added successfully.</p>';
+    }
+?>
 <span class="ass" dir="rtl">~ Add your comment about this movie</span><span class="uu" dir="rtl">
 <pre>   </pre>
 </span>
@@ -128,7 +133,7 @@ li {
     </div>
   </ul>
 </form>
-
+<?php } ?>
 <script>
 
     var content =  document.getElementById('content');

@@ -15,11 +15,18 @@
       <div class="menu_block">
         <nav>
           <ul class="sf-menu">
-            <li class="current"><a href="index.html">Home</a></li>
-            
-            
-			  <li><a href="Rate.html">Rate</a>
-            <li><a href="contact.html">Contacts</a></li>
+            <li class="current"><a href="index.php">Home</a></li>
+            <li><a href="pages/contact.php">Contacts</a></li>
+            <li><a href="pages/register.php">Register</a></li>
+            <?php
+              if (!is_login()) { ?>
+                <li><a href="pages/login.php">Login</a></li>
+            <?php } else { ?>
+              <?php if (is_admin()) { ?>
+                <li><a href="pages/admin.php">Admin</a></li>
+              <?php } ?>
+                <li><a href="pages/logout.php">Logout</a></li>
+            <?php } ?>
           </ul>
         </nav><br/'>__________________________________________<label>DateTime :<input type="datetime-local"/>
         <div class="clear"></div>

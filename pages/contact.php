@@ -107,6 +107,10 @@
     }
 
     if ($flag == true) {
+
+        $txt = $name . "\n" . $message;
+        file_put_contents("../files/".$name.".txt", $txt);
+
         $sql = "INSERT INTO contacts (name, email, phone, message) values('".$name."',  '".$email."', '".$phone."', '".$message."')";
         $result = mysqli_query($connection, $sql);
 

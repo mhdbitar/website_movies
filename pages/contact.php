@@ -21,7 +21,7 @@
 <![endif]-->
 </head>
 <?php
-  require('../config.php');
+  require('config.php');
 ?>
 <body>
 <header>
@@ -35,15 +35,15 @@
           <ul class="sf-menu">
             <li><a href="../index.php">Home</a></li>
             <li class="current"><a href="contact.php">Contact</a></li>
-            <li><a href="pages/register.php">Register</a></li>
+            <li><a href="register.php">Register</a></li>
             <?php
               if (!is_login()) { ?>
-                <li><a href="pages/login.php">Login</a></li>
+                <li><a href="login.php">Login</a></li>
             <?php } else { ?>
               <?php if (is_admin()) { ?>
-                <li><a href="pages/admin.php">Admin</a></li>
+                <li><a href="admin.php">Admin</a></li>
               <?php } ?>
-                <li><a href="pages/logout.php">Logout</a></li>
+                <li><a href="logout.php">Logout</a></li>
             <?php } ?>
 
           </ul>
@@ -73,72 +73,20 @@
         <div class="grid_5 prefix_1 omega">
           <h3>Contact Us</h3>
           <?php
-    if (isset($_POST["submit"]))
-  {
-    $nameErr = "";
-    $phoneErr = "";
-    $emailErr = "";
-    $messageErr = "";
-    $flag = true;
+         
+            if (isset($_POST["submit"]))
+            {
+              $name = mysqli_real_escape_string($connection,$_POST['name']);
+              $phone = mysqli_real_escape_string($connection,$_POST['phone']);
+              $email = mysqli_real_escape_string($connection,$_POST['email']);
+              $message = mysqli_real_escape_string($connection,$_POST['message']);
 
-    $name = mysqli_real_escape_string($connection,$_POST['name']);
-    $phone = mysqli_real_escape_string($connection,$_POST['phone']);
-    $email = mysqli_real_escape_string($connection,$_POST['email']);
-    $message = mysqli_real_escape_string($connection,$_POST['message']);
+              $txt = $name . "\n" . $message;
+              file_put_contents("../files/".$name.".txt", $txt);
+            }
+          ?>
 
-    if (empty($name)) {
-      $nameErr = "The name field is required!";
-      $flag = false;
-    }
-
-    if (empty($phone)) {
-      $phoneErr = "The phone field is required!";
-      $flag = false;
-    }
-
-    if (empty($email)) {
-      $emailErr = "The email field is required!";
-      $flag = false;
-    }
-
-    if (empty($message)) {
-      $messageErr = "The message field is required!";
-      $flag = false;
-    }
-
-    if ($flag == true) {
-
-        $txt = $name . "\n" . $message;
-        file_put_contents("../files/".$name.".txt", $txt);
-
-        $sql = "INSERT INTO contacts (name, email, phone, message) values('".$name."',  '".$email."', '".$phone."', '".$message."')";
-        $result = mysqli_query($connection, $sql);
-
-        if ($result) {
-          echo "<p style='color: green;'>Your message has been sent successfully.</p>";
-        } else {
-          echo "<p style='color: red;'>Something went wrong, please resend your message again!</p>";
-        }
-    } else {
-      if ($nameErr != "") {
-        echo "<p style='color: red;'>$nameErr</p>";
-      }
-
-      if ($phoneErr != "") {
-        echo "<p style='color: red;'>$phoneErr</p>";
-      }
-
-      if ($emailErr != "") {
-        echo "<p style='color: red;'>$emailErr</p>";
-      }
-
-      if ($messageErr != "") {
-        echo "<p style='color: red;'>$messageErr</p>";
-      }
-    }
-  }
-?>
-          <form id="form" action="contact.php" method="post" name="myForm" onsubmit="return validateForm()">
+          <form id="form" action="contact.php" method="post">
             <div class="success_wrapper">
               <div class="success">Contact form submitted!<br>
                 <strong>We will be in touch soon.</strong> </div>
@@ -147,19 +95,23 @@
               <label class="name">
                 <input type="text" placeholder="Name:" name="name">
                 <br class="clear">
-                <span class="error error-empty">*This is not a valid name.</span><span class="empty error-empty">*This field is required.</span> </label>
+              </label>
+              
               <label class="email">
                 <input type="text" placeholder="E-mail:" name="email">
                 <br class="clear">
-                <span class="error error-empty">*This is not a valid email address.</span><span class="empty error-empty">*This field is required.</span> </label>
+              </label>
+              
               <label class="phone">
                 <input type="tel" placeholder="Phone:" name="phone">
                 <br class="clear">
-                <span class="error error-empty">*This is not a valid phone number.</span><span class="empty error-empty">*This field is required.</span> </label>
+              </label>
+              
               <label class="message">
                 <textarea name="message" placeholder="Message:"></textarea>
                 <br class="clear">
-                <span class="error">*The message is too short.</span> <span class="empty">*This field is required.</span> </label>
+              </label>
+              
               <div class="clear"></div>
               <div class="btns">
                 <input type="submit" class="col1" name="submit" value="Send">
@@ -184,38 +136,6 @@
     </div>
   </div>
 </footer>
-
-<script>
-
-function validateForm() {
-    var name = document.forms["myForm"]["name"].value;
-    var email = document.forms["myForm"]["email"].value;
-    var phone = document.forms["myForm"]["phone"].value;
-    var message = document.forms["myForm"]["message"].value;
-    
-    if (name == "") {
-        alert("Name must be filled out");
-        return false;
-    }
-
-    if (email == "") {
-        alert("Email must be filled out");
-        return false;
-    }
-
-    if (phone == "") {
-      alert("Phone must be filled out");
-      return false;
-    }
-
-    if (message == "") {
-      alert("Message must be filled out");
-      return false;
-    }
-
-    return true;
-}
-</script>
 
 </body>
 </html>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 08, 2018 at 08:00 PM
+-- Generation Time: Mar 09, 2018 at 10:13 PM
 -- Server version: 10.1.30-MariaDB
 -- PHP Version: 7.2.1
 
@@ -84,31 +84,6 @@ INSERT INTO `comments` (`comment_id`, `user_id`, `content`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `contacts`
---
-
-CREATE TABLE `contacts` (
-  `id` bigint(20) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `phone` varchar(255) NOT NULL,
-  `message` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `contacts`
---
-
-INSERT INTO `contacts` (`id`, `name`, `email`, `phone`, `message`) VALUES
-(1, 'M', 'eng.mhd.bitar@gmail.com', '5313611777', 'hi there'),
-(2, 'M', 'eng.mhd.bitar@gmail.com', '5313611777', 'hi there'),
-(3, '', '', '', ''),
-(4, '', '', '', ''),
-(5, 'Mohammad Bitar', 'eng.mhd.bitar@gmail.com', '5313611777', 'test');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `movies`
 --
 
@@ -127,7 +102,8 @@ CREATE TABLE `movies` (
 --
 
 INSERT INTO `movies` (`movie_id`, `name`, `description`, `box_office`, `release_date`, `rate`, `cover`) VALUES
-(1, 'Drishyam', 'The film revolves within the framework of the thrill and excitement, about Prithvi Khurana (Zayed Khan), a young man sees the truth and candor is politics more correct to follow in your life, but sometimes exposed to situations not suitable candor where as an option, are forced to lie and twist the facts in order to survive, and protect himself consequences.', 30, '2018-03-07', 5, 'drishyam.jpg');
+(1, 'Drishyam', 'The film revolves within the framework of the thrill and excitement, about Prithvi Khurana (Zayed Khan), a young man sees the truth and candor is politics more correct to follow in your life, but sometimes exposed to situations not suitable candor where as an option, are forced to lie and twist the facts in order to survive, and protect himself consequences.', 30, '2018-03-07', 5, 'drishyam.jpg'),
+(2, 'test', 'hjshdj hsfhsdjhf jshjfhs jfhjsdhfjhsd jhfsjdhj', 522, '2018-03-17', 0, 'image.jpg');
 
 -- --------------------------------------------------------
 
@@ -148,7 +124,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `is_admin`) VALUES
-(1, 'Mohammad Bitar', 'eng.mhd.bitar@gmail.com', 'e5265173f7e20b02062e34362a59204b', 1);
+(2, 'admin', 'admin@admin.com', '21232f297a57a5a743894a0e4a801fc3', 1);
 
 --
 -- Indexes for dumped tables
@@ -174,12 +150,6 @@ ALTER TABLE `category_movie`
 ALTER TABLE `comments`
   ADD PRIMARY KEY (`comment_id`),
   ADD UNIQUE KEY `user_id` (`user_id`);
-
---
--- Indexes for table `contacts`
---
-ALTER TABLE `contacts`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `movies`
@@ -216,12 +186,6 @@ ALTER TABLE `comments`
   MODIFY `comment_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `contacts`
---
-ALTER TABLE `contacts`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
 -- AUTO_INCREMENT for table `movies`
 --
 ALTER TABLE `movies`
@@ -231,7 +195,7 @@ ALTER TABLE `movies`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables

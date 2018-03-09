@@ -40,7 +40,7 @@ th, td {
 </style>
 </head>
 <?php
-  require('../config.php');
+  require('config.php');
 ?>
 <body>
 <header>
@@ -53,21 +53,16 @@ th, td {
         <nav>
           <ul class="sf-menu">
             <li><a href="../index.php">Home</a></li>
-            
-            
-            <li><a href="./rate.php">Rate</a></li>
-  
             <li><a href="contact.php">Contact</a></li>
-
-            <li><a href="pages/register.php">Register</a></li>
+            <li><a href="register.php">Register</a></li>
             <?php
               if (!is_login()) { ?>
-                <li><a href="pages/login.php">Login</a></li>
+                <li><a href="login.php">Login</a></li>
             <?php } else { ?>
               <?php if (is_admin()) { ?>
-                <li class="current"><a href="pages/admin.php">Admin</a></li>
+                <li class="current"><a href="admin.php">Admin</a></li>
               <?php } ?>
-                <li><a href="pages/logout.php">Logout</a></li>
+                <li><a href="logout.php">Logout</a></li>
             <?php } ?>
           </ul>
         </nav>
@@ -84,59 +79,7 @@ th, td {
       <div class="box bx2 pb1">
         <div class="grid_12 ">
           <h3>Movie Mangements</h3>
-          <?php
-    if (isset($_POST["submit"]))
-  {
-    $nameErr = "";
-    $emailErr = "";
-    $passwordErr = "";
-    $flag = true;
-
-    $name = mysqli_real_escape_string($connection,$_POST['name']);
-    $password = mysqli_real_escape_string($connection,$_POST['password']);
-    $email = mysqli_real_escape_string($connection,$_POST['email']);
-  
-    if (empty($name)) {
-      $nameErr = "The name field is required!";
-      $flag = false;
-    }
-
-    if (empty($password)) {
-      $phoneErr = "The password field is required!";
-      $flag = false;
-    }
-
-    if (empty($email)) {
-      $emailErr = "The email field is required!";
-      $flag = false;
-    }
-
-    if ($flag == true) {
-        $sql = "INSERT INTO users (name, email, password) values('".$name."', '".$email."', '".md5($password)."')";
-        $result = mysqli_query($connection, $sql);
-
-        if ($result) {
-          echo "<p style='color: green;'>$name created successfully.</p>";
-        } else {
-          echo "<p style='color: red;'>Something went wrong!</p>";
-        }
-    } else {
-      if ($nameErr != "") {
-        echo "<p style='color: red;'>$nameErr</p>";
-      }
-
-      if ($passwordErr != "") {
-        echo "<p style='color: red;'>$passwordErr</p>";
-      }
-
-      if ($emailErr != "") {
-        echo "<p style='color: red;'>$emailErr</p>";
-      }
-    }
-  }
-?>
-
-<a href="./add.php" id="add">Add</a><br>
+      
 <table style="width:100%">
   <tr>
     <th>#</th>
@@ -162,14 +105,111 @@ th, td {
             echo "<td>". $row['box_office']. "</td>";
             echo "<td>". $date->format('Y'). "</td>";
             echo "<td><img src='../images/". $row['cover']."'></td>";
-            echo "<td><a href='delete.php?id=". $row['movie_id'] ."' id='delete'>Delete</a></td>";
+            echo "<td><a href='edit.php?id=". $row['movie_id'] ."' id='edit'>Edit</a> <a href='delete.php?id=". $row['movie_id'] ."' id='delete'>Delete</a></td>";
           echo "</tr>";
           $i++;
         }
       }
   ?>
 </table>
-        <div class="clear"></div>
+
+  <div class="container_12">
+    <div class="grid_12 cont1">
+      <div class="box bx2 pb1">
+        <div class="grid_12 ">
+          <h3>Add New Movie</h3>
+          <?php
+            if (isset($_POST["submit"]))
+            {
+              $name = mysqli_real_escape_string($connection,$_POST['name']);
+              $description = mysqli_real_escape_string($connection,$_POST['description']);
+              $box_office = mysqli_real_escape_string($connection,$_POST['box_office']);
+              $release_date = mysqli_real_escape_string($connection,$_POST['release_date']);
+
+              $errors = upload($_FILES["cover"], $errors);
+
+              $sql = "INSERT INTO movies (name, description, box_office, release_date, cover) values('".$name."',  '".$description."', '".$box_office."', '".$release_date."', '".$_FILES["cover"]['name']."')";
+              
+              $result = mysqli_query($connection, $sql);
+              
+              if ($result) {
+                echo '<p style="color: green;">Added successfully</p>';
+              } else {
+                echo '<p style="color: red;">Something went wrong!</p>';
+              }
+            }
+
+            function upload($file, $errors) {
+              $target_dir = "../images/";
+              $target_file = $target_dir . basename($file["name"]);
+              $uploadOk = 1;
+              $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+              
+              $check = getimagesize($file["tmp_name"]);
+              if($check == false) {
+                array_push($errors, "File is not an image.");
+              }
+
+              // Check if file already exists
+              if (file_exists($target_file)) {
+                array_push($errors, "Sorry, file already exists.");
+              }
+
+              // Allow certain file formats
+              if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+              && $imageFileType != "gif" ) {
+                  array_push($errors, "Sorry, only JPG, JPEG, PNG & GIF files are allowed.");
+              }
+
+              if (move_uploaded_file($file["tmp_name"], $target_file)) {
+                  
+              } else {
+                  array_push($errors, "Sorry, there was an error uploading your file.");
+              }
+
+              return $errors;
+            }
+        ?>
+
+          <form id="form" action="admin.php" method="post" enctype="multipart/form-data">
+            <fieldset>
+              <label class="name">
+                <input type="text" placeholder="Name:" name="name">
+                <br class="clear">
+              </label>
+              
+              <label class="box_office">
+                <input type="text" placeholder="Box Office:" name="box_office">
+                <br class="clear">
+              </label>
+
+              <label class="cover">
+                <input type="file" placeholder="Cover:" name="cover">
+                <br class="clear">
+               </label>
+
+              <label class="release_date">
+                <input type="date" placeholder="Release Date:" name="release_date">
+                <br class="clear">
+              </label>
+              
+              <label class="description">
+                <textarea placeholder="Description:" name="description"></textarea>
+                <br class="clear">
+              </label>
+              
+               <div class="clear"></div>
+              <div class="btns">
+                <input type="submit" class="col1" name="submit" value="Add">
+                <input type="reset" value="Reset" class="col1">
+                <div class="clear"></div>
+              </div>
+            </fieldset>
+          </form>
+      </div>
+    </div>
+  </div>
+
       </div>
     </div>
   </div>

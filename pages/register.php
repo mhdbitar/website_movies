@@ -21,7 +21,7 @@
 <![endif]-->
 </head>
 <?php
-  require('../config.php');
+  require('config.php');
 ?>
 <body>
 <header>
@@ -34,21 +34,16 @@
         <nav>
           <ul class="sf-menu">
             <li><a href="../index.php">Home</a></li>
-            
-            
-            <li><a href="./rate.php">Rate</a></li>
-  
             <li><a href="contact.php">Contact</a></li>
-
-            <li class="current"><a href="pages/register.php">Register</a></li>
+            <li class="current"><a href="register.php">Register</a></li>
             <?php
               if (!is_login()) { ?>
-                <li><a href="pages/login.php">Login</a></li>
+                <li><a href="login.php">Login</a></li>
             <?php } else { ?>
               <?php if (is_admin()) { ?>
-                <li><a href="pages/admin.php">Admin</a></li>
+                <li><a href="admin.php">Admin</a></li>
               <?php } ?>
-                <li><a href="pages/logout.php">Logout</a></li>
+                <li><a href="logout.php">Logout</a></li>
             <?php } ?>
           </ul>
         </nav>
@@ -66,71 +61,41 @@
         <div class="grid_12 ">
           <h3>Create an Account</h3>
           <?php
-    if (isset($_POST["submit"]))
-  {
-    $nameErr = "";
-    $emailErr = "";
-    $passwordErr = "";
-    $flag = true;
+            if (isset($_POST["submit"]))
+            {
+              $name = mysqli_real_escape_string($connection,$_POST['name']);
+              $password = mysqli_real_escape_string($connection,$_POST['password']);
+              $email = mysqli_real_escape_string($connection,$_POST['email']);
+    
+              $sql = "INSERT INTO users (name, email, password) values('".$name."', '".$email."', '".md5($password)."')";
+              $result = mysqli_query($connection, $sql);
 
-    $name = mysqli_real_escape_string($connection,$_POST['name']);
-    $password = mysqli_real_escape_string($connection,$_POST['password']);
-    $email = mysqli_real_escape_string($connection,$_POST['email']);
-  
-    if (empty($name)) {
-      $nameErr = "The name field is required!";
-      $flag = false;
-    }
-
-    if (empty($password)) {
-      $phoneErr = "The password field is required!";
-      $flag = false;
-    }
-
-    if (empty($email)) {
-      $emailErr = "The email field is required!";
-      $flag = false;
-    }
-
-    if ($flag == true) {
-        $sql = "INSERT INTO users (name, email, password) values('".$name."', '".$email."', '".md5($password)."')";
-        $result = mysqli_query($connection, $sql);
-
-        if ($result) {
-          echo "<p style='color: green;'>$name created successfully.</p>";
-        } else {
-          echo "<p style='color: red;'>Something went wrong!</p>";
-        }
-    } else {
-      if ($nameErr != "") {
-        echo "<p style='color: red;'>$nameErr</p>";
-      }
-
-      if ($passwordErr != "") {
-        echo "<p style='color: red;'>$passwordErr</p>";
-      }
-
-      if ($emailErr != "") {
-        echo "<p style='color: red;'>$emailErr</p>";
-      }
-    }
-  }
-?>
+              if ($result) {
+                echo "<p style='color: green;'>$name created successfully.</p>";
+              } else {
+                echo "<p style='color: red;'>Something went wrong!</p>";
+              }
+            }
+          ?>
+          
           <form id="form" action="register.php" method="post" name="myForm" onsubmit="return validateForm()">
             <fieldset>
               <label class="name">
                 <input type="text" placeholder="Name:" name="name">
                 <br class="clear">
-                <span class="error error-empty">*This is not a valid name.</span><span class="empty error-empty">*This field is required.</span> </label>
+              </label>
+              
               <label class="email">
                 <input type="text" placeholder="E-mail:" name="email">
                 <br class="clear">
-                <span class="error error-empty">*This is not a valid email address.</span><span class="empty error-empty">*This field is required.</span> </label>
+              </label>
+              
               <label class="password">
                 <input type="password" placeholder="Password:" name="password">
                 <br class="clear">
-                <span class="error error-empty">*This is not a valid phone number.</span><span class="empty error-empty">*This field is required.</span> </label>
-               <div class="clear"></div>
+              </label>
+              
+              <div class="clear"></div>
               <div class="btns">
                 <input type="submit" class="col1" name="submit" value="Register">
                 <input type="reset" value="Reset" class="col1">

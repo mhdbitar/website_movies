@@ -1,9 +1,15 @@
-<?php
-  require('../header.php');
-?>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Shahed movies</title>
+    <meta charset="utf-8">
+    <link rel="icon" href="images/favicon.ico">
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/jquery.countdown.css">
+  </head>
 
-<body>
-<style type="text/css">
+  <style type="text/css">
   .head {
     text-align: center;
     font-size: 36px;
@@ -41,7 +47,12 @@
   li {
     list-style-type: none;
   }
-</style>
+</style>  
+<?php
+  require('config.php');
+?>
+<body>
+
 
 <?php 
     
@@ -79,11 +90,27 @@
   <?php } } ?>
   
 </table> 
-    <a href="../index.html">Go back</a>
+    <a href="../index.php">Go back</a>
     <p class="text"><br />
     </p>
 <p>&nbsp;</p>
 
-<?php
-  require('../footer.php');
-?>
+<footer>
+  <div class="container_12">
+    <div class="grid_12">
+      <div class="socials"> <a href="#"></a> <a href="#"></a> <a href="#"></a> <a href="#"></a> </div>
+      <div class="copy">Shahed Movies &copy; 2045 | <a href="#TOP">Top</a> | Design by: Maram-Lama-Alla-Amjad-Samhaa</a></div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/jquery.js"></script>
+
+
+<script src="js/jquery.easing.1.3.js"></script>
+<script src="js/script.js"></script>
+<script src="js/jquery.carouFredSel-6.1.0-packed.js"></script>
+<script src="js/jquery.touchSwipe.min.js"></script>
+
+</body>
+</html>

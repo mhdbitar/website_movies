@@ -21,7 +21,7 @@
 <![endif]-->
 </head>
 <?php
-  require('../config.php');
+  require('config.php');
 ?>
 <body>
 <header>
@@ -34,21 +34,16 @@
         <nav>
           <ul class="sf-menu">
             <li><a href="../index.php">Home</a></li>
-            
-            
-            <li><a href="./rate.php">Rate</a></li>
-  
             <li><a href="contact.php">Contact</a></li>
-
-            <li><a href="pages/register.php">Register</a></li>
+            <li><a href="register.php">Register</a></li>
             <?php
               if (!is_login()) { ?>
-                <li class="current"><a href="pages/login.php">Login</a></li>
+                <li class="current"><a href="login.php">Login</a></li>
             <?php } else { ?>
               <?php if (is_admin()) { ?>
-                <li><a href="pages/admin.php">Admin</a></li>
+                <li><a href="admin.php">Admin</a></li>
               <?php } ?>
-                <li><a href="pages/logout.php">Logout</a></li>
+                <li><a href="logout.php">Logout</a></li>
             <?php } ?>
           </ul>
         </nav>
@@ -66,76 +61,53 @@
         <div class="grid_12 ">
           <h3>Login</h3>
           <?php
-    if (isset($_POST["submit"]))
-  {
-    $emailErr = "";
-    $passwordErr = "";
-    $flag = TRUE;
+            if (isset($_POST["submit"]))
+            {
+              $email = mysqli_real_escape_string($connection,$_POST['email']);
+              $password = md5(mysqli_real_escape_string($connection,$_POST['password']));
 
-    $email = mysqli_real_escape_string($connection,$_POST['email']);
-    $password = md5(mysqli_real_escape_string($connection,$_POST['password']));
+              $sql = "SELECT * FROM users where email='".$email."'";
+              $result = mysqli_query($connection, $sql);
 
-    if (empty($email)) {
-      $emailErr = "The email field is required!";
-      $flag = FALSE;
-    }
+              if ($result->num_rows == 1) {
+                while ($row = mysqli_fetch_assoc($result)) {
+                  $db_password = $row['password'];
+                  if ($password == $db_password) {
+                    $_SESSION['logged_in'] = 1;
+                    $_SESSION['user_id'] = $row['id'];
+                    $_SESSION['name'] = $row['name'];
+                    $_SESSION['email'] = $row['email'];
+                    $_SESSION['is_admin'] = $row['is_admin'];
 
-    if (empty($password)) {
-      $passwordErr = "The password field is required!";
-      $flag = FALSE;
-    }
-
-    if ($flag == TRUE) {
-
-      $sql = "SELECT * FROM users where email='".$email."'";
-      $result = mysqli_query($connection, $sql);
-
-      if ($result->num_rows == 1) {
-        while ($row = mysqli_fetch_assoc($result)) {
-          $db_password = $row['password'];
-          if ($password == $db_password) {
-            $_SESSION['logged_in'] = 1;
-            $_SESSION['user_id'] = $row['id'];
-            $_SESSION['name'] = $row['name'];
-            $_SESSION['email'] = $row['email'];
-            $_SESSION['is_admin'] = $row['is_admin'];
-
-            $_SESSION['suucess'] = '<p style="color: green;">You are logged in</p>';
-            if ($row['is_admin'] == "1") {
-              header("location: ./admin.php");
+                    $_SESSION['suucess'] = '<p style="color: green;">You are logged in</p>';
+                    if ($row['is_admin'] == "1") {
+                      header("location: ./admin.php");
+                    } else {
+                      header("location: ../index.php");
+                    }
+                  } else {
+                    echo '<p style="color: red;">Wrong email and password!</p>';
+                  }
+                }
             } else {
-              header("location: ../index.php");
+              echo '<p style="color: red;">User is not exist!</p>';
             }
+          } 
+        ?>
 
-          } else {
-            echo '<p style="color: red;">Wrong email and password!</p>';
-          }
-        }
-        } else {
-          echo '<p style="color: red;">User is not exist!</p>';
-        }
-      } else {
-        if ($emailErr != "") {
-          echo '<p style="color: red;">' .$emailErr. '</p>';
-        }
-
-        if ($passwordErr != "") {
-          echo '<p style="color: red;">' .$passwordErr. ' </p>';
-        }
-      }
-    } 
-?>
           <form id="form" action="login.php" method="post" name="myForm" onsubmit="return validateForm()">
             <fieldset>
               <label class="email">
                 <input type="text" placeholder="E-mail:" name="email">
                 <br class="clear">
-                <span class="error error-empty">*This is not a valid email address.</span><span class="empty error-empty">*This field is required.</span> </label>
+              </label>
+              
               <label class="password">
                 <input type="password" placeholder="Password:" name="password">
                 <br class="clear">
-                <span class="error error-empty">*This is not a valid phone number.</span><span class="empty error-empty">*This field is required.</span> </label>
-               <div class="clear"></div>
+              </label>
+              
+              <div class="clear"></div>
               <div class="btns">
                 <input type="submit" class="col1" name="submit" value="Login">
                 <input type="reset" value="Reset" class="col1">
